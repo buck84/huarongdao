@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html>
+<html>
+<body
+<p>华容道</p>
+<canvas id="myCanvas" width="400" height="500" style="border:1px solid #d3d3d3;background:#ffffff;">
+Your browser does not support the HTML5 canvas tag.
+</canvas>
+
+<script>
+
+function Node(name, img, x, y, w, h)
+{
+	this.name = name;
+	this.image = img;
+	this.x = x;
+	this.y = y;
+	this.w = w;
+	this.h = h;
+}
+
+var nodes = new Array();
+nodes[0] = new Node("caocao", new Image(), 1, 0, 2, 2)
+nodes[1] = new Node("zhangfei", new Image(), 0, 0, 1, 2)
+nodes[2] = new Node("zhaoyun", new Image(), 3, 0, 1, 2)
+nodes[3] = new Node("huangzhong", new Image(), 0, 2, 1, 2)
+nodes[4] = new Node("machao", new Image(), 3, 2, 1, 2)
+nodes[5] = new Node("guanyu", new Image(), 1, 2, 2, 1)
+nodes[6] = new Node("zu", new Image(), 0, 4, 1, 1)
+nodes[7] = new Node("zu", new Image(), 1, 4, 1, 1)
+nodes[8] = new Node("zu", new Image(), 2, 4, 1, 1)
+nodes[9] = new Node("zu", new Image(), 3, 4, 1, 1)
+
+for (var i=0; i<nodes.length; i++)
+{
+	var c=document.getElementById("myCanvas");
+	var ctx=c.getContext("2d");
+	var img = nodes[i].image;
+	img.src = "images/" + nodes[i].name + ".png";
+	var x = nodes[i].x;
+	var y = nodes[i].y;
+	/*img.onload = function ()
+	{
+		ctx.drawImage(img, x*100, y*100);
+	}*/
+}
+
+function DisplayGame()
+{
+	for (var i=0; i<nodes.length; i++)
+	{
+		var c=document.getElementById("myCanvas");
+		var ctx=c.getContext("2d");
+		ctx.drawImage(nodes[i].image, nodes[i].x*100, nodes[i].y*100, nodes[i].w*100, nodes[i].h*100);
+	}
+}
+
+</script>
+
+<button type="button" onclick="DisplayGame()">点击这里</button>
+</body>
+</html>
+
