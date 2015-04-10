@@ -2,9 +2,14 @@
 <html>
 <body
 <p>华容道</p>
-<canvas id="myCanvas" width="400" height="500" style="border:1px solid #d3d3d3;background:#ffffff;">
+<canvas id="myCanvas" width="400" height="500" onmousedown="mDown(event)" onmouseup="mUp(event)" style="border:1px solid #d3d3d3;background:#ffffff;">
 Your browser does not support the HTML5 canvas tag.
 </canvas>
+<br />
+<button type="button" onclick="DisplayGame()">点击这里</button>
+<br />
+<div id="info1"></div>
+<div id="info2"></div>
 
 <script>
 
@@ -29,6 +34,44 @@ nodes[6] = new Node("zu", new Image(), 0, 4, 1, 1)
 nodes[7] = new Node("zu", new Image(), 1, 4, 1, 1)
 nodes[8] = new Node("zu", new Image(), 2, 4, 1, 1)
 nodes[9] = new Node("zu", new Image(), 3, 4, 1, 1)
+
+var clickIndex = -1;
+var clickX = -1;
+var clickY = -1;
+
+function mDown(e)
+{
+	var x = e.offsetX;
+	var y = e.offsetY;
+	if(clickIndex<0)
+	{
+		clickIndex = -1;
+		for(var i=0; i<nodes.length; i++)	//nodes.length
+		{
+			if(x>nodes[i].x*100 && x<(nodes[i].x+nodes[i].w)*100 && y>nodes[i].y*100 && y<(nodes[i].y+nodes[i].h)*100)
+			{
+				clickIndex = i;
+				clickX = x;
+				clickY = y;
+				break;
+			}
+		}
+		document.getElementById("info1").innerHTML="click: " + clickIndex +"(" + x + "," + y + ")";
+		var showIndex = 2;
+		document.getElementById("info2").innerHTML=nodes[showIndex].x+","+nodes[showIndex].y+","+nodes[showIndex].w+","+nodes[showIndex].h;
+	}
+	else
+	{
+		var dx = x-clickX;
+		var dy = y-clickY;
+
+		clickIndex = -1;
+	}
+}
+
+function mUp(e)
+{
+}
 
 for (var i=0; i<nodes.length; i++)
 {
@@ -56,7 +99,6 @@ function DisplayGame()
 
 </script>
 
-<button type="button" onclick="DisplayGame()">点击这里</button>
 </body>
 </html>
 
