@@ -200,6 +200,12 @@ function mouseDown(e)
 	document.getElementById("info2").innerHTML=nodes[showIndex].x+","+nodes[showIndex].y+","+nodes[showIndex].w+","+nodes[showIndex].h;
 }
 
+// 输出调试信息到info1
+function showstr1(s)
+{
+	document.getElementById("info1").innerHTML=s
+}
+
 // 输出调试信息到info2
 function showstr(s)
 {
@@ -407,10 +413,13 @@ function FindPath()
 		nodesPos[i] = new NodePos(nodes[i].x, nodes[i].y);
 	}
 
-	graphNodes[0] = new GraphNode(nodesPos, new Array(), false)
-	//while(true)
-	for(var k=0; k<11111; ++k)
+	graphNodes[0] = new GraphNode(nodesPos, new Array(), false);
+	var counter = 0
+
+	while(true)
+	//for(var k=0; k<11; ++k)
 	{
+		counter = counter+1
 		var i;
 		for(i=0; i<graphNodes.length; i++)
 		{
@@ -422,12 +431,12 @@ function FindPath()
 		}
 		if(isWin)
 		{
-			showstr("win");
+			showstr1("win, counter:" + counter);
 			break;
 		}
 		if(i==graphNodes.length)
 		{
-			showstr("somethingwrong");
+			showstr1("somethingwrong counter:" + counter);
 			break;
 		}
 	}
