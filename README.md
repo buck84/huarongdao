@@ -8,3 +8,5 @@ huarongdaohtml5完成，用javascript实现
 如果需要调整局面，修改huarongdaohtml5/huarongdao.js中的相关代码：
 nodes[0] = new Node("caocao", new Image(), 1, 0, 2, 2)
 ...
+
+目前横刀立马用4s

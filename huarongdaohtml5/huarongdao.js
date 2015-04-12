@@ -11,7 +11,7 @@ function Node(name, img, x, y, w, h)
 
 // 所有角色
 var nodes = new Array();
-/*横刀立马
+//*横刀立马
 nodes[0] = new Node("caocao", new Image(), 1, 0, 2, 2)
 nodes[1] = new Node("zhangfei", new Image(), 0, 0, 1, 2)
 nodes[2] = new Node("zhaoyun", new Image(), 3, 0, 1, 2)
@@ -23,7 +23,7 @@ nodes[7] = new Node("zu", new Image(), 1, 4, 1, 1)
 nodes[8] = new Node("zu", new Image(), 2, 4, 1, 1)
 nodes[9] = new Node("zu", new Image(), 3, 4, 1, 1)
 //*/
-//*
+/*
 nodes[0] = new Node("caocao", new Image(), 2, 2, 2, 2)
 nodes[1] = new Node("zhangfei", new Image(), 0, 0, 1, 2)
 nodes[2] = new Node("zhaoyun", new Image(), 1, 0, 1, 2)
@@ -34,7 +34,7 @@ nodes[6] = new Node("zu", new Image(), 0, 4, 1, 1)
 nodes[7] = new Node("zu", new Image(), 1, 4, 1, 1)
 nodes[8] = new Node("zu", new Image(), 2, 4, 1, 1)
 nodes[9] = new Node("zu", new Image(), 3, 4, 1, 1)
-//*
+//*/
 /*
 nodes[0] = new Node("caocao", new Image(), 0, 2, 2, 2)
 nodes[1] = new Node("zhangfei", new Image(), 0, 0, 1, 2)
@@ -46,13 +46,31 @@ nodes[6] = new Node("zu", new Image(), 2, 3, 1, 1)
 nodes[7] = new Node("zu", new Image(), 3, 3, 1, 1)
 nodes[8] = new Node("zu", new Image(), 2, 4, 1, 1)
 nodes[9] = new Node("zu", new Image(), 3, 4, 1, 1)
-*/
+//*/
+
+
+var index22 = new Array();
+var index12 = new Array();
+var index21 = new Array();
+var index11 = new Array();
+for(var i=0; i<nodes.length; i++)
+{
+	if(nodes[i].w==2 && nodes[i].h==2)
+		index22[index22.length] = i;
+	else if(nodes[i].w==1 && nodes[i].h==2)
+		index12[index12.length] = i;
+	else if(nodes[i].w==2 && nodes[i].h==1)
+		index21[index21.length] = i;
+	else if(nodes[i].w==1 && nodes[i].h==1)
+		index11[index11.length] = i;
+}
 
 // 角色位置
 function NodePos(x, y)
 {
 	this.x = x;
 	this.y = y;
+	this.index = function() { return this.x+this.y*4; }
 }
 
 // 所有空点位置
@@ -300,6 +318,21 @@ function DisplayGame()
 	}
 }
 
+function SortNum(a)
+{
+	for(var i=0; i<a.length-1; i++)
+	{
+		for(var j=i+1; j<a.length; j++)
+		{
+			if(a[i]>a[j])
+			{
+				var temp = a[i];
+				a[i] = a[j];
+				a[j] = temp;
+			}
+		}
+	}
+}
 
 function GraphNode(nodesPos, edges, checked, p, v)
 {
@@ -318,6 +351,78 @@ function GraphNode(nodesPos, edges, checked, p, v)
 				return false;
 		}
 		return true;
+	}
+	this.m1 = 0;
+	this.m2 = 0;
+	var mult = 1;
+	var index = 0;
+	var pos22 = new Array();
+	for(var i=0; i<index22.length; i++)
+	{
+		pos22[pos22.length] = nodesPos[index22[i]].index();
+	}
+	SortNum(pos22);
+	for(var i=0; i<pos22.length; i++)
+	{
+		if(index<5)
+			this.m1 = this.m1 + pos22[i]*mult;
+		else
+			this.m2 = this.m2 + pos22[i]*mult;
+		index = index + 1;
+		mult = mult*100;
+		if(index==5)
+			mult = 1;
+	}
+	var pos12 = new Array();
+	for(var i=0; i<index12.length; i++)
+	{
+		pos12[pos12.length] = nodesPos[index12[i]].index();
+	}
+	SortNum(pos12);
+	for(var i=0; i<pos12.length; i++)
+	{
+		if(index<5)
+			this.m1 = this.m1 + pos12[i]*mult;
+		else
+			this.m2 = this.m2 + pos12[i]*mult;
+		index = index + 1;
+		mult = mult*100;
+		if(index==5)
+			mult = 1;
+	}
+	var pos21 = new Array();
+	for(var i=0; i<index21.length; i++)
+	{
+		pos21[pos21.length] = nodesPos[index21[i]].index();
+	}
+	SortNum(pos21);
+	for(var i=0; i<pos21.length; i++)
+	{
+		if(index<5)
+			this.m1 = this.m1 + pos21[i]*mult;
+		else
+			this.m2 = this.m2 + pos21[i]*mult;
+		index = index + 1;
+		mult = mult*100;
+		if(index==5)
+			mult = 1;
+	}
+	var pos11 = new Array();
+	for(var i=0; i<index11.length; i++)
+	{
+		pos11[pos11.length] = nodesPos[index11[i]].index();
+	}
+	SortNum(pos11);
+	for(var i=0; i<pos11.length; i++)
+	{
+		if(index<5)
+			this.m1 = this.m1 + pos11[i]*mult;
+		else
+			this.m2 = this.m2 + pos11[i]*mult;
+		index = index + 1;
+		mult = mult*100;
+		if(index==5)
+			mult = 1;
 	}
 }
 
@@ -339,9 +444,46 @@ function CopyNodesPos(nodesPos)
 // 对于判断节点每一个位置，查看待判断表中是否有相应大小元素
 function AddOneGraphNode(nodesPos, p)
 {
+	var newNode = new GraphNode(nodesPos, new Array, false, p, p.v+1);
 	var i;
 	for(i=0; i<graphNodes.length; i++)
 	{
+		/*
+		if(graphNodes[i].nodesPos[0].x!=nodesPos[0].x || graphNodes[i].nodesPos[0].y!=nodesPos[0].y)
+			continue;
+		if(graphNodes[i].nodesPos[5].x!=nodesPos[5].x || graphNodes[i].nodesPos[5].y!=nodesPos[5].y)
+			continue;
+		var j;
+		for(j=1; j<=4; j++)
+		{
+			var k;
+			for(k=1; k<=4; k++)
+			{
+				if(graphNodes[i].nodesPos[j].x==nodesPos[k].x && graphNodes[i].nodesPos[j].y==nodesPos[k].y)
+					break;
+			}
+			if(k==5)
+				break;
+		}
+		if(j<=4)
+			continue;
+		for(j=6; j<=9; j++)
+		{
+			var k;
+			for(k=6; k<=9; k++)
+			{
+				if(graphNodes[i].nodesPos[j].x==nodesPos[k].x && graphNodes[i].nodesPos[j].y==nodesPos[k].y)
+					break;
+			}
+			if(k==10)
+				break;
+		}
+		if(j<=9)
+			continue;
+
+		return i;
+//*/
+		/*
 		var j;
 		for(j=0; j<graphNodes[i].nodesPos.length; j++)
 		{
@@ -356,10 +498,15 @@ function AddOneGraphNode(nodesPos, p)
 		}
 		if(j==graphNodes[i].nodesPos.length)
 			return i;
+		//*/
+		//*
+		if(newNode.m1==graphNodes[i].m1 && newNode.m2==graphNodes[i].m2)
+			return i;
+		//*/
 	}
 	if(i==graphNodes.length)
 	{
-		graphNodes[graphNodes.length] = new GraphNode(nodesPos, new Array, false, p, p.v+1);
+		graphNodes[graphNodes.length] = newNode;
 		if(nodesPos[0].x==1 && nodesPos[0].y==3)
 			isWin = true;
 		return graphNodes.length;
@@ -444,10 +591,11 @@ function FindPath()
 	}
 
 	graphNodes[0] = new GraphNode(nodesPos, new Array(), false);
-	var counter = 0
+	var counter = 0;
 
+	var d1 = new Date();
 	while(true)
-	//for(var k=0; k<11; ++k)
+	//for(var k=0; k<12; ++k)
 	{
 		counter = counter+1
 		var i;
@@ -470,7 +618,9 @@ function FindPath()
 			break;
 		}
 	}
-	showstr("current node:"+graphNodes.length);
+	var d2 = new Date();
+	showstr1("current node:"+graphNodes.length+" time ecipse:"+(d2.getTime()-d1.getTime()));
+	//DisplayAllGraph();
 	DisplaySolution();
 }
 
