@@ -11,6 +11,7 @@ function Node(name, img, x, y, w, h)
 
 // 所有角色
 var nodes = new Array();
+/*横刀立马
 nodes[0] = new Node("caocao", new Image(), 1, 0, 2, 2)
 nodes[1] = new Node("zhangfei", new Image(), 0, 0, 1, 2)
 nodes[2] = new Node("zhaoyun", new Image(), 3, 0, 1, 2)
@@ -21,6 +22,31 @@ nodes[6] = new Node("zu", new Image(), 0, 4, 1, 1)
 nodes[7] = new Node("zu", new Image(), 1, 4, 1, 1)
 nodes[8] = new Node("zu", new Image(), 2, 4, 1, 1)
 nodes[9] = new Node("zu", new Image(), 3, 4, 1, 1)
+//*/
+//*
+nodes[0] = new Node("caocao", new Image(), 2, 2, 2, 2)
+nodes[1] = new Node("zhangfei", new Image(), 0, 0, 1, 2)
+nodes[2] = new Node("zhaoyun", new Image(), 1, 0, 1, 2)
+nodes[3] = new Node("huangzhong", new Image(), 3, 0, 1, 2)
+nodes[4] = new Node("machao", new Image(), 0, 2, 1, 2)
+nodes[5] = new Node("guanyu", new Image(), 1, 2, 1, 2)
+nodes[6] = new Node("zu", new Image(), 0, 4, 1, 1)
+nodes[7] = new Node("zu", new Image(), 1, 4, 1, 1)
+nodes[8] = new Node("zu", new Image(), 2, 4, 1, 1)
+nodes[9] = new Node("zu", new Image(), 3, 4, 1, 1)
+//*
+/*
+nodes[0] = new Node("caocao", new Image(), 0, 2, 2, 2)
+nodes[1] = new Node("zhangfei", new Image(), 0, 0, 1, 2)
+nodes[2] = new Node("zhaoyun", new Image(), 3, 0, 1, 2)
+nodes[3] = new Node("huangzhong", new Image(), 1, 0, 1, 2)
+nodes[4] = new Node("machao", new Image(), 2, 0, 1, 2)
+nodes[5] = new Node("guanyu", new Image(), 2, 2, 2, 1)
+nodes[6] = new Node("zu", new Image(), 2, 3, 1, 1)
+nodes[7] = new Node("zu", new Image(), 3, 3, 1, 1)
+nodes[8] = new Node("zu", new Image(), 2, 4, 1, 1)
+nodes[9] = new Node("zu", new Image(), 3, 4, 1, 1)
+*/
 
 // 角色位置
 function NodePos(x, y)
@@ -275,8 +301,10 @@ function DisplayGame()
 }
 
 
-function GraphNode(nodesPos, edges, checked)
+function GraphNode(nodesPos, edges, checked, p, v)
 {
+	this.p = p;
+	this.v = v;
 	this.nodesPos = nodesPos;
 	this.edges = edges;
 	this.checked = checked;
@@ -309,7 +337,7 @@ function CopyNodesPos(nodesPos)
 }
 
 // 对于判断节点每一个位置，查看待判断表中是否有相应大小元素
-function AddOneGraphNode(nodesPos)
+function AddOneGraphNode(nodesPos, p)
 {
 	var i;
 	for(i=0; i<graphNodes.length; i++)
@@ -331,7 +359,7 @@ function AddOneGraphNode(nodesPos)
 	}
 	if(i==graphNodes.length)
 	{
-		graphNodes[graphNodes.length] = new GraphNode(nodesPos, new Array, false);
+		graphNodes[graphNodes.length] = new GraphNode(nodesPos, new Array, false, p, p.v+1);
 		if(nodesPos[0].x==1 && nodesPos[0].y==3)
 			isWin = true;
 		return graphNodes.length;
@@ -353,7 +381,7 @@ function SearchOne(index)
 				{
 					var newNodesPos = CopyNodesPos(n.nodesPos);
 					newNodesPos[i].y = newNodesPos[i].y - 1;
-					var insertPos = AddOneGraphNode(newNodesPos);
+					var insertPos = AddOneGraphNode(newNodesPos, n);
 					n.edges[n.edges.length] = insertPos
 				}
 			}
@@ -367,7 +395,7 @@ function SearchOne(index)
 				{
 					var newNodesPos = CopyNodesPos(n.nodesPos);
 					newNodesPos[i].y = newNodesPos[i].y + 1;
-					var insertPos = AddOneGraphNode(newNodesPos);
+					var insertPos = AddOneGraphNode(newNodesPos, n);
 					n.edges[n.edges.length] = insertPos
 				}
 			}
@@ -381,7 +409,7 @@ function SearchOne(index)
 				{
 					var newNodesPos = CopyNodesPos(n.nodesPos);
 					newNodesPos[i].x = newNodesPos[i].x - 1;
-					var insertPos = AddOneGraphNode(newNodesPos);
+					var insertPos = AddOneGraphNode(newNodesPos, n);
 					n.edges[n.edges.length] = insertPos
 				}
 			}
@@ -395,11 +423,13 @@ function SearchOne(index)
 				{
 					var newNodesPos = CopyNodesPos(n.nodesPos);
 					newNodesPos[i].x = newNodesPos[i].x + 1;
-					var insertPos = AddOneGraphNode(newNodesPos);
+					var insertPos = AddOneGraphNode(newNodesPos, n);
 					n.edges[n.edges.length] = insertPos
 				}
 			}
 		}
+		if(isWin)
+			break;
 	}
 
 }
@@ -431,7 +461,7 @@ function FindPath()
 		}
 		if(isWin)
 		{
-			showstr1("win, counter:" + counter);
+			showstr1("计算成功, 搜索总节点数:" + counter);
 			break;
 		}
 		if(i==graphNodes.length)
@@ -441,7 +471,7 @@ function FindPath()
 		}
 	}
 	showstr("current node:"+graphNodes.length);
-	DisplayAllGraph();
+	DisplaySolution();
 }
 
 function findObj(theObj, theDoc)
@@ -489,4 +519,40 @@ function DisplayAllGraph()
 			//*/
 		}
 	}
+}
+
+function DisplaySolution()
+{
+	var solutionNodes = new Array();
+	var n = graphNodes[graphNodes.length-1];
+	solutionNodes[0] = n;
+	while(n!=graphNodes[0])
+	{
+		n = n.p;
+		solutionNodes[solutionNodes.length] = n;
+	}
+	var tbl = document.getElementById("deallist");
+	var col = 0;
+	var row = 1;
+	var r = tbl.insertRow(i);
+	for(var i=solutionNodes.length-1; i>=0; i--)
+	{
+		if(col>=5)
+		{
+			col = 0;
+			r = tbl.insertRow(row);
+			row = row + 1;
+		}
+		var c = r.insertCell(col);
+		col = col + 1;
+		c.innerHTML = "<canvas id=\"graphcanvas" + i +"\" width=\"200\" height=\"250\" style=\"border:1px solid #d3d3d3;background:#ffffff;\"> </canvas>";
+		var c=document.getElementById("graphcanvas" + i);
+		var ctx=c.getContext("2d");
+		ctx.clearRect(0,0,200,250);
+		for (var k=0; k<nodes.length; k++)
+		{
+			ctx.drawImage(nodes[k].image, solutionNodes[i].nodesPos[k].x*50, solutionNodes[i].nodesPos[k].y*50, nodes[k].w*50, nodes[k].h*50);
+		}
+	}
+	showstr("最少步数:"+solutionNodes.length);
 }
